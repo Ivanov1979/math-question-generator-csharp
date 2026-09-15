@@ -1,0 +1,296 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+
+class Program
+{
+    // Displays a menu and returns the selected item.
+    static string SelectFromMenu(
+        List<string> options,
+        string title)
+    {
+        Console.WriteLine();
+        Console.WriteLine(title);
+
+        for (int i = 0; i < options.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. {options[i]}");
+        }
+
+        Console.Write("Choice: ");
+
+        string input = Console.ReadLine() ?? "";
+
+        if (int.TryParse(input, out int choice) &&
+            choice >= 1 &&
+            choice <= options.Count)
+        {
+            return options[choice - 1];
+        }
+
+        return "";
+    }
+
+    // Saves the generated question and teacher/user response.
+    static void SaveResult(
+        Activity activity,
+        string studentAnswer,
+        bool isCorrect)
+    {
+        using StreamWriter file =
+            new StreamWriter("results.txt", true);
+
+        file.WriteLine($"Course: {activity.GetCourse()}");
+        file.WriteLine($"OA: {activity.GetOA()}");
+        file.WriteLine(
+            $"Assessment Indicator: {activity.GetIndicator()}");
+
+        file.WriteLine(
+            $"Competency: {activity.GetCompetency()}");
+
+        file.WriteLine(
+            $"Difficulty: {activity.GetDifficulty()}");
+
+        file.WriteLine(
+            $"Question: {activity.GetQuestion()}");
+
+        file.WriteLine(
+            $"Student Answer: {studentAnswer}");
+
+        file.WriteLine(
+            $"Correct Answer: {activity.GetAnswer()}");
+
+        file.WriteLine(
+            $"Result: {(isCorrect ? "Correct" : "Incorrect")}");
+
+        file.WriteLine(
+            "------------------------------------------");
+    }
+
+    // Runs the teacher question-generation workflow.
+    static void Main(string[] args)
+    {
+        Console.WriteLine(
+            "==========================================");
+
+        Console.WriteLine(
+            "     Math Question & Activity Engine");
+
+        Console.WriteLine(
+            "==========================================");
+
+        Console.WriteLine(
+            "\nTeacher Question Generator");
+
+        // -----------------------------------------
+        // CONTENT
+        // -----------------------------------------
+
+        List<string> contents = new List<string>
+        {
+            "Patterns & Algebra"
+        };
+
+        string content =
+            SelectFromMenu(
+                contents,
+                "Select mathematical content:");
+
+        if (content == "")
+        {
+            Console.WriteLine("Invalid selection.");
+            return;
+        }
+
+        // -----------------------------------------
+        // GRADE
+        // -----------------------------------------
+
+        List<string> grades = new List<string>
+        {
+            "6th Grade"
+        };
+
+        string grade =
+            SelectFromMenu(
+                grades,
+                "Select grade:");
+
+        if (grade == "")
+        {
+            Console.WriteLine("Invalid selection.");
+            return;
+        }
+
+        // -----------------------------------------
+        // LEARNING OBJECTIVE
+        // -----------------------------------------
+
+        List<string> learningObjectives =
+            new List<string>
+            {
+                "OA09"
+            };
+
+        string oa =
+            SelectFromMenu(
+                learningObjectives,
+                "Select Learning Objective (OA):");
+
+        if (oa == "")
+        {
+            Console.WriteLine("Invalid selection.");
+            return;
+        }
+
+        // -----------------------------------------
+        // ASSESSMENT INDICATOR
+        // -----------------------------------------
+
+        List<string> indicators =
+            new List<string>
+            {
+                "Identify the rule in a numerical pattern",
+                "Complete a numerical sequence using a given rule"
+            };
+
+        string indicator =
+            SelectFromMenu(
+                indicators,
+                "Select Assessment Indicator:");
+
+        if (indicator == "")
+        {
+            Console.WriteLine("Invalid selection.");
+            return;
+        }
+
+        // -----------------------------------------
+        // MATHEMATICAL COMPETENCY
+        // -----------------------------------------
+
+        List<string> competencies =
+            new List<string>
+            {
+                "Represent",
+                "Model",
+                "Solve Problems",
+                "Argue & Communicate"
+            };
+
+        string competency =
+            SelectFromMenu(
+                competencies,
+                "Select Mathematical Competency:");
+
+        if (competency == "")
+        {
+            Console.WriteLine("Invalid selection.");
+            return;
+        }
+
+        // -----------------------------------------
+        // DIFFICULTY
+        // -----------------------------------------
+
+        List<string> difficulties =
+            new List<string>
+            {
+                "Easy",
+                "Medium",
+                "Hard"
+            };
+
+        string difficulty =
+            SelectFromMenu(
+                difficulties,
+                "Select Difficulty:");
+
+        if (difficulty == "")
+        {
+            Console.WriteLine("Invalid selection.");
+            return;
+        }
+
+        // -----------------------------------------
+        // GENERATE RANDOM QUESTION
+        // -----------------------------------------
+
+        QuestionGenerator generator =
+            new QuestionGenerator();
+
+        string generateAgain = "y";
+
+        int correctAnswers = 0;
+        int totalAnswers = 0;
+
+        while (generateAgain.ToLower() == "y")
+        {
+            Activity question =
+                generator.GenerateQuestion(
+                    grade,
+                    oa,
+                    indicator,
+                    competency,
+                    difficulty);
+
+            Console.WriteLine();
+            Console.WriteLine(
+                "==========================================");
+
+            Console.WriteLine("GENERATED QUESTION");
+
+            Console.WriteLine(
+                "==========================================");
+
+            Console.WriteLine($"Content: {content}");
+
+            question.Display();
+
+            Console.Write("\nYour answer: ");
+
+            string studentAnswer =
+                Console.ReadLine() ?? "";
+
+            bool isCorrect =
+                question.CheckAnswer(studentAnswer);
+
+            totalAnswers++;
+
+            if (isCorrect)
+            {
+                correctAnswers++;
+
+                Console.WriteLine(
+                    "\nCorrect!");
+            }
+            else
+            {
+                Console.WriteLine(
+                    "\nIncorrect.");
+
+                Console.WriteLine(
+                    $"Correct answer: {question.GetAnswer()}");
+            }
+
+            SaveResult(
+                question,
+                studentAnswer,
+                isCorrect);
+
+            Console.WriteLine(
+                $"\nScore: {correctAnswers}/{totalAnswers}");
+
+            Console.Write(
+                "\nGenerate another question " +
+                "with the same criteria? (y/n): ");
+
+            generateAgain =
+                Console.ReadLine() ?? "n";
+        }
+
+        Console.WriteLine();
+        Console.WriteLine(
+            "Question generation session complete.");
+    }
+}

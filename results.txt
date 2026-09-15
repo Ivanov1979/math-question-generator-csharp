@@ -1,0 +1,10 @@
+Course: 6th Grade
+OA: OA09
+Assessment Indicator: Complete a numerical sequence using a given rule
+Competency: Represent
+Difficulty: Medium
+Question: Complete the pattern: 6, 13, 20, __, 34
+Student Answer: 27
+Correct Answer: 27
+Result: Correct
+------------------------------------------
