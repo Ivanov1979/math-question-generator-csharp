@@ -12,10 +12,10 @@ public static class CurriculumData
             "Numbers",
             "Additive Field",
             "Multiplicative Field",
-            "Patterns",
+            "Patterns and Algebra",
             "Geometry",
             "Measurement",
-            "Data"
+            "Data and Probability"
         };
     }
 
@@ -45,8 +45,7 @@ public static class CurriculumData
         };
     }
 
-    // Returns the difficulty levels used by
-    // the question generation engine.
+    // Returns the difficulty levels used by the engine.
     public static List<string> GetDifficulties()
     {
         return new List<string>
@@ -57,29 +56,74 @@ public static class CurriculumData
         };
     }
 
-    // Returns curriculum items containing the
-    // relationships between field, content,
-    // grade, OA, and assessment indicator.
+    // Returns curriculum items containing the relationship:
+    //
+    // Field → Content → Grade → OA
+    // → Learning Detail → Assessment Indicator
+    //
+    // This list will be expanded using the REAM curriculum.
     public static List<CurriculumItem> GetCurriculum()
     {
         List<CurriculumItem> curriculum =
             new List<CurriculumItem>();
 
-        // Initial prototype:
-        // Additional REAM curriculum items will be
-        // incorporated without changing the engine.
+
+        // ==========================================
+        // PATTERNS AND ALGEBRA
+        // 6TH GRADE - OA09
+        // ==========================================
 
         curriculum.Add(
             new CurriculumItem(
-                "Patterns",
+                "Patterns and Algebra",
                 "Numerical Patterns",
                 "6th Grade",
                 "OA09",
-                "Numerical patterns and relationships.",
+                "Demonstrate understanding of relationships " +
+                "in numerical patterns.",
+                "Identify rules in numerical patterns",
                 new List<string>
                 {
-                    "Identify the rule in a numerical pattern",
+                    "Identify the rule in a numerical pattern"
+                }
+            )
+        );
+
+        curriculum.Add(
+            new CurriculumItem(
+                "Patterns and Algebra",
+                "Numerical Patterns",
+                "6th Grade",
+                "OA09",
+                "Demonstrate understanding of relationships " +
+                "in numerical patterns.",
+                "Complete numerical sequences",
+                new List<string>
+                {
                     "Complete a numerical sequence using a given rule"
+                }
+            )
+        );
+
+
+        // ==========================================
+        // NUMBERS
+        // 4TH GRADE - OA08
+        // ==========================================
+
+        curriculum.Add(
+            new CurriculumItem(
+                "Numbers",
+                "Fractions",
+                "4th Grade",
+                "OA08",
+                "Demonstrate understanding of fractions " +
+                "with denominators 2, 3, 4, 5, 6, 8, 10 and 12.",
+                "Represent fractions",
+                new List<string>
+                {
+                    "Represent fractions concretely, " +
+                    "pictorially and symbolically"
                 }
             )
         );
@@ -90,12 +134,34 @@ public static class CurriculumData
                 "Fractions",
                 "4th Grade",
                 "OA08",
-                "Understand fractions with denominators " +
-                "2, 3, 4, 5, 6, 8, 10 and 12.",
+                "Demonstrate understanding of fractions " +
+                "with denominators 2, 3, 4, 5, 6, 8, 10 and 12.",
+                "Compare fractions with the same denominator",
                 new List<string>
                 {
-                    "Represent fractions concretely, pictorially and symbolically",
                     "Compare fractions with the same denominator"
+                }
+            )
+        );
+
+
+        // ==========================================
+        // MULTIPLICATIVE FIELD
+        // 4TH GRADE - OA05
+        // ==========================================
+
+        curriculum.Add(
+            new CurriculumItem(
+                "Multiplicative Field",
+                "Division",
+                "4th Grade",
+                "OA05",
+                "Demonstrate understanding of division.",
+                "Represent division",
+                new List<string>
+                {
+                    "Represent division using equal sharing " +
+                    "or repeated subtraction"
                 }
             )
         );
@@ -107,13 +173,15 @@ public static class CurriculumData
                 "4th Grade",
                 "OA05",
                 "Demonstrate understanding of division.",
+                "Division in problem situations",
                 new List<string>
                 {
-                    "Represent division using equal sharing or repeated subtraction",
-                    "Solve routine division problems in real contexts"
+                    "Solve routine division problems " +
+                    "in real contexts"
                 }
             )
         );
+
 
         return curriculum;
     }

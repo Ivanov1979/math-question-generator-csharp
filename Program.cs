@@ -1,5 +1,7 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
+using MySqlConnector;
 
 class Program
 {
@@ -12,33 +14,32 @@ class Program
         Console.WriteLine();
         Console.WriteLine(title);
 
-        // Prevents the program from displaying
-        // an empty menu.
         if (options.Count == 0)
         {
             Console.WriteLine("No options available.");
             return "";
         }
 
-        // Displays each menu option with a number.
         for (int i = 0; i < options.Count; i++)
         {
-            Console.WriteLine($"{i + 1}. {options[i]}");
+            Console.WriteLine(
+                $"{i + 1}. {options[i]}");
         }
 
         Console.Write("Choice: ");
 
-        string input = Console.ReadLine() ?? "";
+        string input =
+            Console.ReadLine() ?? "";
 
-        // Validates that the user entered a number.
-        if (!int.TryParse(input, out int choice))
+        if (!int.TryParse(
+            input,
+            out int choice))
         {
             return "";
         }
 
-        // Validates that the number corresponds
-        // to an available menu option.
-        if (choice < 1 || choice > options.Count)
+        if (choice < 1 ||
+            choice > options.Count)
         {
             return "";
         }
@@ -46,11 +47,104 @@ class Program
         return options[choice - 1];
     }
 
+    // Connects to MySQL and retrieves curriculum information
+    // by joining learning objectives, learning details,
+    // and assessment indicators.
+    static void TestDatabase()
+    {
+        try
+        {
+            using var connection =
+                DatabaseConnection.CreateConnection();
+
+            connection.Open();
+
+            Console.WriteLine(
+                "Successfully connected to MySQL!");
+
+            Console.WriteLine(
+                $"Database: {connection.Database}");
+
+            const string sql = @"
+                SELECT
+                    lo.oa_code,
+                    lo.oa_description,
+                    ld.detail_description,
+                    ai.indicator_description
+                FROM LearningObjectives AS lo
+                INNER JOIN LearningDetails AS ld
+                    ON lo.oa_id = ld.oa_id
+                INNER JOIN AssessmentIndicators AS ai
+                    ON ai.detail_id = ld.detail_id
+                    AND ai.oa_id = lo.oa_id;";
+
+            using var command =
+                new MySqlCommand(sql, connection);
+
+            using var reader =
+                command.ExecuteReader();
+
+            int recordCount = 0;
+
+            while (reader.Read())
+            {
+                recordCount++;
+
+                Console.WriteLine();
+                Console.WriteLine(
+                    $"OA: {reader.GetString(0)}");
+
+                Console.WriteLine(
+                    $"Description: {reader.GetString(1)}");
+
+                Console.WriteLine(
+                    $"Learning Detail: {reader.GetString(2)}");
+
+                Console.WriteLine(
+                    $"Assessment Indicator: {reader.GetString(3)}");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine(
+                $"Curriculum records retrieved: {recordCount}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(
+                $"Database test failed: {ex.Message}");
+        }
+    }
 
     // Main entry point of the mathematical
     // question generation engine.
     static void Main(string[] args)
     {
+        // ==========================================
+        // TEST MYSQL DATABASE CONNECTION AND QUERY
+        // ==========================================
+
+        // Runs the MySQL CRUD demonstration without
+        // starting the normal question-generation workflow.
+        if (args.Length > 0 && args[0] == "--test-crud")
+        {
+            try
+            {
+                DatabaseCrud.RunDemo();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(
+                    $"CRUD demonstration failed: {ex.Message}");
+            }
+
+            return;
+        }
+        if (args.Length > 0 && args[0] == "--test-db")
+        {
+            TestDatabase();
+            return;
+        }
+
         Console.WriteLine(
             "==========================================");
 
@@ -61,20 +155,16 @@ class Program
             "==========================================");
 
         Console.WriteLine();
+
         Console.WriteLine(
             "Teacher Question Generator");
-
 
         // ==========================================
         // CREATE CURRICULUM MANAGER
         // ==========================================
 
-        // The curriculum manager controls the
-        // relationships between field, content,
-        // grade, OA, and assessment indicator.
         CurriculumManager manager =
             new CurriculumManager();
-
 
         // ==========================================
         // 1. MATHEMATICAL FIELD
@@ -93,13 +183,10 @@ class Program
             return;
         }
 
-
         // ==========================================
         // 2. MATHEMATICAL CONTENT
         // ==========================================
 
-        // Only contents belonging to the selected
-        // mathematical field are displayed.
         List<string> contents =
             manager.GetContents(field);
 
@@ -116,13 +203,10 @@ class Program
             return;
         }
 
-
         // ==========================================
         // 3. GRADE
         // ==========================================
 
-        // Only grades where the selected content
-        // exists are displayed.
         List<string> grades =
             manager.GetGradesForContent(
                 field,
@@ -141,13 +225,10 @@ class Program
             return;
         }
 
-
         // ==========================================
-        // 4. LEARNING OBJECTIVE (OA)
+        // 4. LEARNING OBJECTIVE
         // ==========================================
 
-        // Only OAs associated with the selected
-        // field, content, and grade are displayed.
         List<string> oas =
             manager.GetOAs(
                 field,
@@ -167,19 +248,41 @@ class Program
             return;
         }
 
+        // ==========================================
+        // 5. LEARNING DETAIL
+        // ==========================================
+
+        List<string> learningDetails =
+            manager.GetLearningDetails(
+                field,
+                content,
+                grade,
+                oa);
+
+        string learningDetail =
+            SelectFromMenu(
+                learningDetails,
+                "Select Learning Detail:");
+
+        if (learningDetail == "")
+        {
+            Console.WriteLine(
+                "Invalid learning detail.");
+
+            return;
+        }
 
         // ==========================================
-        // 5. ASSESSMENT INDICATOR
+        // 6. ASSESSMENT INDICATOR
         // ==========================================
 
-        // Retrieves assessment indicators associated
-        // with the selected curriculum combination.
         List<string> indicators =
             manager.GetIndicators(
                 field,
                 content,
                 grade,
-                oa);
+                oa,
+                learningDetail);
 
         string indicator =
             SelectFromMenu(
@@ -194,9 +297,8 @@ class Program
             return;
         }
 
-
         // ==========================================
-        // 6. MATHEMATICAL SKILL
+        // 7. MATHEMATICAL SKILL
         // ==========================================
 
         string skill =
@@ -212,9 +314,8 @@ class Program
             return;
         }
 
-
         // ==========================================
-        // 7. DIFFICULTY
+        // 8. DIFFICULTY
         // ==========================================
 
         string difficulty =
@@ -230,40 +331,38 @@ class Program
             return;
         }
 
-
         // ==========================================
-        // 8. EXERCISE TYPE
+        // 9. EXERCISE TYPE
         // ==========================================
 
-        // Exercise types will be incorporated later.
-        // For the current engine prototype we use
-        // "General" as the default exercise type.
+        // Exercise types will be incorporated
+        // when the exercise classification
+        // is added to the engine.
+
         string exerciseType = "General";
-
 
         // ==========================================
         // CREATE GENERATION REQUEST
         // ==========================================
 
-        // The GenerationRequest struct stores all
-        // parameters selected by the teacher.
         GenerationRequest request =
             new GenerationRequest(
                 field,
                 content,
                 grade,
                 oa,
+                learningDetail,
                 indicator,
                 skill,
                 difficulty,
                 exerciseType);
-
 
         // ==========================================
         // DISPLAY GENERATION REQUEST
         // ==========================================
 
         Console.WriteLine();
+
         Console.WriteLine(
             "==========================================");
 
@@ -286,6 +385,10 @@ class Program
             $"OA: {request.OA}");
 
         Console.WriteLine(
+            $"Learning Detail: " +
+            $"{request.LearningDetail}");
+
+        Console.WriteLine(
             $"Assessment Indicator: " +
             $"{request.AssessmentIndicator}");
 
@@ -294,11 +397,12 @@ class Program
             $"{request.MathematicalSkill}");
 
         Console.WriteLine(
-            $"Difficulty: {request.Difficulty}");
+            $"Difficulty: " +
+            $"{request.Difficulty}");
 
         Console.WriteLine(
-            $"Exercise Type: {request.ExerciseType}");
-
+            $"Exercise Type: " +
+            $"{request.ExerciseType}");
 
         // ==========================================
         // CREATE QUESTION GENERATOR
@@ -307,20 +411,19 @@ class Program
         QuestionGenerator generator =
             new QuestionGenerator();
 
-
         // ==========================================
-        // GENERATE RANDOM QUESTION
+        // GENERATE QUESTION
         // ==========================================
 
         Activity generatedQuestion =
             generator.GenerateQuestion(request);
-
 
         // ==========================================
         // DISPLAY GENERATED QUESTION
         // ==========================================
 
         Console.WriteLine();
+
         Console.WriteLine(
             "==========================================");
 
@@ -343,12 +446,12 @@ class Program
         Console.WriteLine(
             generatedQuestion.GetAnswer());
 
-
         // ==========================================
-        // END PROGRAM
+        // END
         // ==========================================
 
         Console.WriteLine();
+
         Console.WriteLine(
             "==========================================");
 

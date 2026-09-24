@@ -1,18 +1,18 @@
 using System.Collections.Generic;
 
-// Filters curriculum information according to
-// the selections made by the teacher.
+// Manages and filters curriculum information
+// according to the teacher's selections.
 public class CurriculumManager
 {
     private readonly List<CurriculumItem> curriculum;
 
-    // Loads the curriculum when the manager is created.
+    // Loads curriculum records from MySQL when the manager is created.
     public CurriculumManager()
     {
-        curriculum = CurriculumData.GetCurriculum();
+        curriculum = CurriculumRepository.GetCurriculum();
     }
 
-    // Returns the mathematical fields.
+    // Returns all mathematical fields.
     public List<string> GetFields()
     {
         return CurriculumData.GetFields();
@@ -24,7 +24,7 @@ public class CurriculumManager
         return CurriculumData.GetGrades();
     }
 
-    // Returns the contents available for a field.
+    // Returns contents belonging to a selected field.
     public List<string> GetContents(string field)
     {
         List<string> contents = new List<string>();
@@ -41,8 +41,8 @@ public class CurriculumManager
         return contents;
     }
 
-    // Returns grades available for a specific
-    // mathematical field and content.
+    // Returns grades available for a selected
+    // field and mathematical content.
     public List<string> GetGradesForContent(
         string field,
         string content)
@@ -62,7 +62,7 @@ public class CurriculumManager
         return grades;
     }
 
-    // Returns the OAs available for the selected
+    // Returns the OAs associated with the selected
     // field, content, and grade.
     public List<string> GetOAs(
         string field,
@@ -85,22 +85,53 @@ public class CurriculumManager
         return oas;
     }
 
-    // Returns assessment indicators for the
-    // selected curriculum combination.
-    public List<string> GetIndicators(
+    // Returns learning details associated
+    // with the selected OA.
+    public List<string> GetLearningDetails(
         string field,
         string content,
         string grade,
         string oa)
     {
-        List<string> indicators = new List<string>();
+        List<string> learningDetails =
+            new List<string>();
 
         foreach (CurriculumItem item in curriculum)
         {
             if (item.Field == field &&
                 item.Content == content &&
                 item.Grade == grade &&
-                item.OA == oa)
+                item.OA == oa &&
+                !learningDetails.Contains(
+                    item.LearningDetail))
+            {
+                learningDetails.Add(
+                    item.LearningDetail);
+            }
+        }
+
+        return learningDetails;
+    }
+
+    // Returns assessment indicators associated
+    // with the selected learning detail.
+    public List<string> GetIndicators(
+        string field,
+        string content,
+        string grade,
+        string oa,
+        string learningDetail)
+    {
+        List<string> indicators =
+            new List<string>();
+
+        foreach (CurriculumItem item in curriculum)
+        {
+            if (item.Field == field &&
+                item.Content == content &&
+                item.Grade == grade &&
+                item.OA == oa &&
+                item.LearningDetail == learningDetail)
             {
                 foreach (string indicator in item.Indicators)
                 {
@@ -115,8 +146,8 @@ public class CurriculumManager
         return indicators;
     }
 
-    // Returns the mathematical skills used
-    // by the generation engine.
+    // Returns the four transversal
+    // mathematical skills.
     public List<string> GetMathematicalSkills()
     {
         return CurriculumData.GetMathematicalSkills();

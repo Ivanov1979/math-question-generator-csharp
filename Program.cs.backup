@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 
 class Program
 {
-    // Displays a menu and returns the selected item.
+    // Displays a numbered menu and returns
+    // the option selected by the teacher.
     static string SelectFromMenu(
         List<string> options,
         string title)
@@ -12,6 +12,15 @@ class Program
         Console.WriteLine();
         Console.WriteLine(title);
 
+        // Prevents the program from displaying
+        // an empty menu.
+        if (options.Count == 0)
+        {
+            Console.WriteLine("No options available.");
+            return "";
+        }
+
+        // Displays each menu option with a number.
         for (int i = 0; i < options.Count; i++)
         {
             Console.WriteLine($"{i + 1}. {options[i]}");
@@ -21,138 +30,156 @@ class Program
 
         string input = Console.ReadLine() ?? "";
 
-        if (int.TryParse(input, out int choice) &&
-            choice >= 1 &&
-            choice <= options.Count)
+        // Validates that the user entered a number.
+        if (!int.TryParse(input, out int choice))
         {
-            return options[choice - 1];
+            return "";
         }
 
-        return "";
+        // Validates that the number corresponds
+        // to an available menu option.
+        if (choice < 1 || choice > options.Count)
+        {
+            return "";
+        }
+
+        return options[choice - 1];
     }
 
-    // Saves the generated question and teacher/user response.
-    static void SaveResult(
-        Activity activity,
-        string studentAnswer,
-        bool isCorrect)
-    {
-        using StreamWriter file =
-            new StreamWriter("results.txt", true);
 
-        file.WriteLine($"Course: {activity.GetCourse()}");
-        file.WriteLine($"OA: {activity.GetOA()}");
-        file.WriteLine(
-            $"Assessment Indicator: {activity.GetIndicator()}");
-
-        file.WriteLine(
-            $"Competency: {activity.GetCompetency()}");
-
-        file.WriteLine(
-            $"Difficulty: {activity.GetDifficulty()}");
-
-        file.WriteLine(
-            $"Question: {activity.GetQuestion()}");
-
-        file.WriteLine(
-            $"Student Answer: {studentAnswer}");
-
-        file.WriteLine(
-            $"Correct Answer: {activity.GetAnswer()}");
-
-        file.WriteLine(
-            $"Result: {(isCorrect ? "Correct" : "Incorrect")}");
-
-        file.WriteLine(
-            "------------------------------------------");
-    }
-
-    // Runs the teacher question-generation workflow.
+    // Main entry point of the mathematical
+    // question generation engine.
     static void Main(string[] args)
     {
         Console.WriteLine(
             "==========================================");
 
         Console.WriteLine(
-            "     Math Question & Activity Engine");
+            "     Mathematical Question Engine");
 
         Console.WriteLine(
             "==========================================");
 
+        Console.WriteLine();
         Console.WriteLine(
-            "\nTeacher Question Generator");
+            "Teacher Question Generator");
 
-        // -----------------------------------------
-        // CONTENT
-        // -----------------------------------------
 
-        List<string> contents = new List<string>
+        // ==========================================
+        // CREATE CURRICULUM MANAGER
+        // ==========================================
+
+        // The curriculum manager controls the
+        // relationships between field, content,
+        // grade, OA, and assessment indicator.
+        CurriculumManager manager =
+            new CurriculumManager();
+
+
+        // ==========================================
+        // 1. MATHEMATICAL FIELD
+        // ==========================================
+
+        string field =
+            SelectFromMenu(
+                manager.GetFields(),
+                "Select Mathematical Field:");
+
+        if (field == "")
         {
-            "Patterns & Algebra"
-        };
+            Console.WriteLine(
+                "Invalid mathematical field.");
+
+            return;
+        }
+
+
+        // ==========================================
+        // 2. MATHEMATICAL CONTENT
+        // ==========================================
+
+        // Only contents belonging to the selected
+        // mathematical field are displayed.
+        List<string> contents =
+            manager.GetContents(field);
 
         string content =
             SelectFromMenu(
                 contents,
-                "Select mathematical content:");
+                "Select Mathematical Content:");
 
         if (content == "")
         {
-            Console.WriteLine("Invalid selection.");
+            Console.WriteLine(
+                "Invalid mathematical content.");
+
             return;
         }
 
-        // -----------------------------------------
-        // GRADE
-        // -----------------------------------------
 
-        List<string> grades = new List<string>
-        {
-            "6th Grade"
-        };
+        // ==========================================
+        // 3. GRADE
+        // ==========================================
+
+        // Only grades where the selected content
+        // exists are displayed.
+        List<string> grades =
+            manager.GetGradesForContent(
+                field,
+                content);
 
         string grade =
             SelectFromMenu(
                 grades,
-                "Select grade:");
+                "Select Grade:");
 
         if (grade == "")
         {
-            Console.WriteLine("Invalid selection.");
+            Console.WriteLine(
+                "Invalid grade.");
+
             return;
         }
 
-        // -----------------------------------------
-        // LEARNING OBJECTIVE
-        // -----------------------------------------
 
-        List<string> learningObjectives =
-            new List<string>
-            {
-                "OA09"
-            };
+        // ==========================================
+        // 4. LEARNING OBJECTIVE (OA)
+        // ==========================================
+
+        // Only OAs associated with the selected
+        // field, content, and grade are displayed.
+        List<string> oas =
+            manager.GetOAs(
+                field,
+                content,
+                grade);
 
         string oa =
             SelectFromMenu(
-                learningObjectives,
+                oas,
                 "Select Learning Objective (OA):");
 
         if (oa == "")
         {
-            Console.WriteLine("Invalid selection.");
+            Console.WriteLine(
+                "Invalid Learning Objective.");
+
             return;
         }
 
-        // -----------------------------------------
-        // ASSESSMENT INDICATOR
-        // -----------------------------------------
 
+        // ==========================================
+        // 5. ASSESSMENT INDICATOR
+        // ==========================================
+
+        // Retrieves assessment indicators associated
+        // with the selected curriculum combination.
         List<string> indicators =
-            new List<string>
-            {
-                "Identify the rule in a numerical pattern",
-                "Complete a numerical sequence using a given rule"
-            };
+            manager.GetIndicators(
+                field,
+                content,
+                grade,
+                oa);
 
         string indicator =
             SelectFromMenu(
@@ -161,136 +188,174 @@ class Program
 
         if (indicator == "")
         {
-            Console.WriteLine("Invalid selection.");
+            Console.WriteLine(
+                "Invalid assessment indicator.");
+
             return;
         }
 
-        // -----------------------------------------
-        // MATHEMATICAL COMPETENCY
-        // -----------------------------------------
 
-        List<string> competencies =
-            new List<string>
-            {
-                "Represent",
-                "Model",
-                "Solve Problems",
-                "Argue & Communicate"
-            };
+        // ==========================================
+        // 6. MATHEMATICAL SKILL
+        // ==========================================
 
-        string competency =
+        string skill =
             SelectFromMenu(
-                competencies,
-                "Select Mathematical Competency:");
+                manager.GetMathematicalSkills(),
+                "Select Mathematical Skill:");
 
-        if (competency == "")
+        if (skill == "")
         {
-            Console.WriteLine("Invalid selection.");
+            Console.WriteLine(
+                "Invalid mathematical skill.");
+
             return;
         }
 
-        // -----------------------------------------
-        // DIFFICULTY
-        // -----------------------------------------
 
-        List<string> difficulties =
-            new List<string>
-            {
-                "Easy",
-                "Medium",
-                "Hard"
-            };
+        // ==========================================
+        // 7. DIFFICULTY
+        // ==========================================
 
         string difficulty =
             SelectFromMenu(
-                difficulties,
+                manager.GetDifficulties(),
                 "Select Difficulty:");
 
         if (difficulty == "")
         {
-            Console.WriteLine("Invalid selection.");
+            Console.WriteLine(
+                "Invalid difficulty.");
+
             return;
         }
 
-        // -----------------------------------------
-        // GENERATE RANDOM QUESTION
-        // -----------------------------------------
+
+        // ==========================================
+        // 8. EXERCISE TYPE
+        // ==========================================
+
+        // Exercise types will be incorporated later.
+        // For the current engine prototype we use
+        // "General" as the default exercise type.
+        string exerciseType = "General";
+
+
+        // ==========================================
+        // CREATE GENERATION REQUEST
+        // ==========================================
+
+        // The GenerationRequest struct stores all
+        // parameters selected by the teacher.
+        GenerationRequest request =
+            new GenerationRequest(
+                field,
+                content,
+                grade,
+                oa,
+                indicator,
+                skill,
+                difficulty,
+                exerciseType);
+
+
+        // ==========================================
+        // DISPLAY GENERATION REQUEST
+        // ==========================================
+
+        Console.WriteLine();
+        Console.WriteLine(
+            "==========================================");
+
+        Console.WriteLine(
+            "GENERATION REQUEST");
+
+        Console.WriteLine(
+            "==========================================");
+
+        Console.WriteLine(
+            $"Field: {request.Field}");
+
+        Console.WriteLine(
+            $"Content: {request.Content}");
+
+        Console.WriteLine(
+            $"Grade: {request.Grade}");
+
+        Console.WriteLine(
+            $"OA: {request.OA}");
+
+        Console.WriteLine(
+            $"Assessment Indicator: " +
+            $"{request.AssessmentIndicator}");
+
+        Console.WriteLine(
+            $"Mathematical Skill: " +
+            $"{request.MathematicalSkill}");
+
+        Console.WriteLine(
+            $"Difficulty: {request.Difficulty}");
+
+        Console.WriteLine(
+            $"Exercise Type: {request.ExerciseType}");
+
+
+        // ==========================================
+        // CREATE QUESTION GENERATOR
+        // ==========================================
 
         QuestionGenerator generator =
             new QuestionGenerator();
 
-        string generateAgain = "y";
 
-        int correctAnswers = 0;
-        int totalAnswers = 0;
+        // ==========================================
+        // GENERATE RANDOM QUESTION
+        // ==========================================
 
-        while (generateAgain.ToLower() == "y")
-        {
-            Activity question =
-                generator.GenerateQuestion(
-                    grade,
-                    oa,
-                    indicator,
-                    competency,
-                    difficulty);
+        Activity generatedQuestion =
+            generator.GenerateQuestion(request);
 
-            Console.WriteLine();
-            Console.WriteLine(
-                "==========================================");
 
-            Console.WriteLine("GENERATED QUESTION");
-
-            Console.WriteLine(
-                "==========================================");
-
-            Console.WriteLine($"Content: {content}");
-
-            question.Display();
-
-            Console.Write("\nYour answer: ");
-
-            string studentAnswer =
-                Console.ReadLine() ?? "";
-
-            bool isCorrect =
-                question.CheckAnswer(studentAnswer);
-
-            totalAnswers++;
-
-            if (isCorrect)
-            {
-                correctAnswers++;
-
-                Console.WriteLine(
-                    "\nCorrect!");
-            }
-            else
-            {
-                Console.WriteLine(
-                    "\nIncorrect.");
-
-                Console.WriteLine(
-                    $"Correct answer: {question.GetAnswer()}");
-            }
-
-            SaveResult(
-                question,
-                studentAnswer,
-                isCorrect);
-
-            Console.WriteLine(
-                $"\nScore: {correctAnswers}/{totalAnswers}");
-
-            Console.Write(
-                "\nGenerate another question " +
-                "with the same criteria? (y/n): ");
-
-            generateAgain =
-                Console.ReadLine() ?? "n";
-        }
+        // ==========================================
+        // DISPLAY GENERATED QUESTION
+        // ==========================================
 
         Console.WriteLine();
         Console.WriteLine(
-            "Question generation session complete.");
+            "==========================================");
+
+        Console.WriteLine(
+            "GENERATED QUESTION");
+
+        Console.WriteLine(
+            "==========================================");
+
+        Console.WriteLine();
+
+        Console.WriteLine(
+            generatedQuestion.GetQuestion());
+
+        Console.WriteLine();
+
+        Console.WriteLine(
+            "Suggested Answer:");
+
+        Console.WriteLine(
+            generatedQuestion.GetAnswer());
+
+
+        // ==========================================
+        // END PROGRAM
+        // ==========================================
+
+        Console.WriteLine();
+        Console.WriteLine(
+            "==========================================");
+
+        Console.WriteLine(
+            "Question generated successfully.");
+
+        Console.WriteLine(
+            "==========================================");
     }
 }

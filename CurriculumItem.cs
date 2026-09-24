@@ -1,30 +1,40 @@
 using System.Collections.Generic;
 
-// Represents one curriculum learning objective and
-// the assessment indicators associated with it.
+// Represents one specific piece of mathematical
+// learning inside the REAM curriculum structure.
 public class CurriculumItem
 {
     public string Field { get; }
     public string Content { get; }
     public string Grade { get; }
+
     public string OA { get; }
-    public string Description { get; }
+    public string OADescription { get; }
+
+    public string LearningDetail { get; }
+
     public List<string> Indicators { get; }
 
-    // Creates a curriculum item.
+    // Creates one curriculum item used by
+    // the mathematical generation engine.
     public CurriculumItem(
         string field,
         string content,
         string grade,
         string oa,
-        string description,
+        string oaDescription,
+        string learningDetail,
         List<string> indicators)
     {
         Field = field;
         Content = content;
         Grade = grade;
+
         OA = oa;
-        Description = description;
+        OADescription = oaDescription;
+
+        LearningDetail = learningDetail;
+
         Indicators = indicators;
     }
 }
