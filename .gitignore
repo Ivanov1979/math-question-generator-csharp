@@ -1,0 +1,7 @@
+bin/
+obj/
+.DS_Store
+
+# Local backup files
+*.backup
+*.save

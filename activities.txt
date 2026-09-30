@@ -1,0 +1,24 @@
+6th Grade|OA09|Identify the rule in a numerical pattern|Represent|Easy|Complete the sequence: 5, 8, 11, __, 17, 20|14
+6th Grade|OA09|Identify the rule in a numerical pattern|Represent|Medium|Complete the sequence: 7, 12, 17, 22, __, 32|27
+6th Grade|OA09|Identify the rule in a numerical pattern|Represent|Hard|Complete the sequence: 4, 10, 16, 22, __, 34|28
+6th Grade|OA09|Identify the rule in a numerical pattern|Model|Easy|A pattern starts at 2 and increases by 4. What is the next number after 10?|14
+6th Grade|OA09|Identify the rule in a numerical pattern|Model|Medium|If the rule is add 3, what number comes after 29?|32
+6th Grade|OA09|Identify the rule in a numerical pattern|Model|Hard|A sequence starts at 7 and increases by 5 each time. What is the sixth term?|32
+6th Grade|OA09|Identify the rule in a numerical pattern|Solve Problems|Easy|A child saves 2 dollars each week. If the child has 4 dollars now, how much will the child have after 3 more weeks?|10
+6th Grade|OA09|Identify the rule in a numerical pattern|Solve Problems|Medium|A plant is 5 cm tall and grows 3 cm each week. How tall will it be after 4 weeks?|17
+6th Grade|OA09|Identify the rule in a numerical pattern|Solve Problems|Hard|A theater has 12 seats in the first row and each new row has 4 more seats than the previous row. How many seats are in the sixth row?|32
+6th Grade|OA09|Identify the rule in a numerical pattern|Argue & Communicate|Easy|What number is added each time in the sequence 3, 6, 9, 12?|3
+6th Grade|OA09|Identify the rule in a numerical pattern|Argue & Communicate|Medium|Explain the rule of the sequence 5, 8, 11, 14.|It increases by 3 each time
+6th Grade|OA09|Identify the rule in a numerical pattern|Argue & Communicate|Hard|Explain why 26 belongs to the sequence 6, 11, 16, 21, 26.|The sequence increases by 5 each time
+6th Grade|OA09|Complete a numerical sequence using a given rule|Represent|Easy|Complete the pattern: 10, 20, 30, __, 50|40
+6th Grade|OA09|Complete a numerical sequence using a given rule|Represent|Medium|Complete the pattern: 6, 13, 20, __, 34|27
+6th Grade|OA09|Complete a numerical sequence using a given rule|Represent|Hard|Complete the pattern: 3, 11, 19, 27, __, 43|35
+6th Grade|OA09|Complete a numerical sequence using a given rule|Model|Easy|The rule is add 5. If the first number is 4, what is the third number?|14
+6th Grade|OA09|Complete a numerical sequence using a given rule|Model|Medium|The rule is add 6. If the first term is 3, what is the fifth term?|27
+6th Grade|OA09|Complete a numerical sequence using a given rule|Model|Hard|The rule is add 7. If the first term is 2, what is the eighth term?|51
+6th Grade|OA09|Complete a numerical sequence using a given rule|Solve Problems|Easy|A staircase pattern uses 3 more blocks at each step. If the first step uses 2 blocks, how many blocks does the fourth step use?|11
+6th Grade|OA09|Complete a numerical sequence using a given rule|Solve Problems|Medium|A student reads 5 more pages each day. The student reads 10 pages on the first day. How many pages are read on the fifth day?|30
+6th Grade|OA09|Complete a numerical sequence using a given rule|Solve Problems|Hard|A hall has 20 chairs in the first row and 6 more chairs in every following row. How many chairs are in the seventh row?|56
+6th Grade|OA09|Complete a numerical sequence using a given rule|Argue & Communicate|Easy|What is the rule for the sequence 2, 6, 10, 14?|Add 4
+6th Grade|OA09|Complete a numerical sequence using a given rule|Argue & Communicate|Medium|Explain how to find the next term in 7, 12, 17, 22.|Add 5 to the previous term
+6th Grade|OA09|Complete a numerical sequence using a given rule|Argue & Communicate|Hard|Explain why 43 is the sixth term of the sequence 8, 15, 22, 29, 36, 43.|The sequence increases by 7 each time
