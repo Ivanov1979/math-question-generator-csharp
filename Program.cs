@@ -119,6 +119,18 @@ class Program
     // question generation engine.
     static void Main(string[] args)
     {
+
+        // Launch the interactive fractions website.
+        // Preserve the existing console application
+        // using the --console argument.
+        if (args.Length == 0 ||
+            args[0] == "--web")
+        {
+            FractionWebServer.Run(
+                Array.Empty<string>());
+            return;
+        }
+
         // ==========================================
         // TEST MYSQL DATABASE CONNECTION AND QUERY
         // ==========================================

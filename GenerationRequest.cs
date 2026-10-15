@@ -1,3 +1,6 @@
+
+using System.Text.Json.Serialization;
+
 // Stores all teacher selections required by the
 // mathematical question generation engine.
 public struct GenerationRequest
@@ -14,8 +17,9 @@ public struct GenerationRequest
     public string Difficulty { get; }
     public string ExerciseType { get; }
 
-    // Creates a complete request for the
-    // mathematical question generator.
+    // Allows ASP.NET Core to deserialize JSON
+    // using the complete constructor.
+    [JsonConstructor]
     public GenerationRequest(
         string field,
         string content,

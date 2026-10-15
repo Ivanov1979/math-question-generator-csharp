@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Math Learning Path</title>
+
+    <style>
+        :root {
+            --primary: #246c9e;
+            --primary-dark: #174e76;
+            --background: #f0f5fa;
+            --text: #243448;
+            --border: #d2dfec;
+            --success: #16803d;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--background);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 26px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        header p {
+            margin: 8px 0 0;
+        }
+
+        main {
+            width: min(1200px, 94%);
+            margin: 25px auto 60px;
+        }
+
+        section {
+            background: white;
+            padding: 34px;
+            border-radius: 15px;
+            margin-bottom: 28px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            color: var(--primary-dark);
+        }
+
+        .description {
+            color: #52657a;
+            margin-bottom: 22px;
+        }
+
+        .form-group {
+            max-width: 780px;
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-size: 1.08rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        select,
+        input,
+        textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+        }
+
+        select:focus,
+        input:focus,
+        textarea:focus {
+            outline: 2px solid #70b5e6;
+            outline-offset: 1px;
+        }
+
+        select:disabled {
+            background: #f1f3f6;
+            color: #788694;
+        }
+
+        button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover:not(:disabled) {
+            background: var(--primary-dark);
+        }
+
+        button:disabled {
+            background: #acbac7;
+            cursor: not-allowed;
+        }
+
+        .status {
+            background: #eaf4fc;
+            padding: 15px 18px;
+            border-left: 4px solid #55a8e3;
+            border-radius: 6px;
+            margin-bottom: 22px;
+        }
+
+        .feedback {
+            margin-top: 16px;
+            font-weight: 600;
+        }
+
+        .activity-question {
+            font-size: 1.2rem;
+            white-space: pre-wrap;
+            padding: 18px;
+            background: #f6f9fc;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .answer-area {
+            max-width: 550px;
+            margin: 20px 0;
+        }
+
+        .mixed-number-input {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .mixed-number-input input {
+            width: 90px;
+            text-align: center;
+        }
+
+        .fraction-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .fraction-stack input {
+            width: 90px;
+        }
+
+        .fraction-divider {
+            width: 90px;
+            border-top: 2px solid #243448;
+        }
+
+        .fraction-model,
+        .interactive-fraction-bar {
+            display: flex;
+            width: min(600px, 100%);
+            min-height: 90px;
+            border: 2px solid #2c5c83;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .fraction-part {
+            flex: 1;
+            border-right: 1px solid #2c5c83;
+            background: white;
+        }
+
+        .fraction-part:last-child {
+            border-right: none;
+        }
+
+        .fraction-part.shaded {
+            background: #61a8df;
+        }
+
+        .interactive-fraction-part {
+            flex: 1;
+            min-width: 0;
+            border: none;
+            border-right: 1px solid #2c5c83;
+            border-radius: 0;
+            padding: 0;
+            background: white;
+            cursor: pointer;
+        }
+
+        .interactive-fraction-part:last-child {
+            border-right: none;
+        }
+
+        .interactive-fraction-part.selected {
+            background: #61a8df;
+        }
+
+        .interactive-fraction-part:hover {
+            background: #d7ebfa;
+        }
+
+        .interactive-fraction-part.selected:hover {
+            background: #4198d9;
+        }
+
+        .interactive-fraction-part:focus-visible {
+            outline: 3px solid #ffae42;
+            outline-offset: -3px;
+        }
+
+        .interactive-instructions {
+            font-weight: bold;
+        }
+
+        .interactive-progress {
+            font-weight: 600;
+            margin: 12px 0;
+        }
+
+        .interactive-reset {
+            background: #61788c;
+        }
+
+        .interactive-counter-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .number-line {
+            margin: 20px 0;
+            padding: 10px;
+        }
+
+        .legacy-section {
+            border-top: 4px solid #9dbbd2;
+        }
+
+        .legacy-section h2 {
+            font-size: 1.45rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px;
+            color: #52657a;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        @media (max-width: 650px) {
+            section {
+                padding: 22px 16px;
+            }
+
+            header h1 {
+                font-size: 1.6rem;
+            }
+
+            .mixed-number-input input {
+                width: 65px;
+            }
+
+            .fraction-stack input {
+                width: 65px;
+            }
+
+            .fraction-divider {
+                width: 65px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Math Learning Path</h1>
+        <p>
+            Interactive Mathematics Learning and Assessment
+        </p>
+    </header>
+
+    <main>
+
+        <!-- ====================================== -->
+        <!-- TEACHER QUESTION GENERATOR             -->
+        <!-- ====================================== -->
+
+        <section id="teacher-generator">
+
+            <h2>Teacher Question Generator</h2>
+
+            <p class="description">
+                Select a grade, learning objective,
+                learning detail, mathematical skill,
+                and difficulty to prepare a mathematics
+                activity.
+            </p>
+
+            <div id="curriculum-status" class="status" aria-live="polite">
+                Loading curriculum from MySQL...
+            </div>
+
+            <!-- 1. GRADE -->
+
+            <div class="form-group">
+                <label for="grade-select">
+                    1. Grade
+                </label>
+
+                <select id="grade-select" disabled>
+                    <option value="">
+                        Select a grade
+                    </option>
+                </select>
+            </div>
+
+            <!-- 2. LEARNING OBJECTIVE -->
+
+            <div class="form-group">
+                <label for="oa-select">
+                    2. Learning Objective (OA)
+                </label>
+
+                <select id="oa-select" disabled>
+                    <option value="">
+                        Select an OA
+                    </option>
+                </select>
+            </div>
+
+            <!-- 3. OA DESAGREGADO -->
+
+            <div class="form-group">
+                <label for="detail-select">
+                    3. OA Desagregado (Learning Detail)
+                </label>
+
+                <select id="detail-select" disabled>
+                    <option value="">
+                        Select an OA desagregado
+                    </option>
+                </select>
+            </div>
+
+            <!-- 4. MATHEMATICAL SKILL -->
+
+            <div class="form-group">
+                <label for="skill-select">
+                    4. Mathematical Skill
+                </label>
+
+                <select id="skill-select" disabled>
+                    <option value="">
+                        Select mathematical skill
+                    </option>
+                </select>
+            </div>
+
+            <!-- 5. DIFFICULTY -->
+
+            <div class="form-group">
+                <label for="difficulty-select">
+                    5. Difficulty
+                </label>
+
+                <select id="difficulty-select">
+                    <option value="Easy">
+                        Easy
+                    </option>
+
+                    <option value="Medium" selected>
+                        Medium
+                    </option>
+
+                    <option value="Hard">
+                        Hard
+                    </option>
+                </select>
+            </div>
+
+            <!-- GENERATE ACTIVITY -->
+
+            <button type="button" id="generate-curriculum-activity" disabled>
+                Generate Activity
+            </button>
+
+            <p id="curriculum-feedback" class="feedback" aria-live="polite"></p>
+
+        </section>
+
+        <!-- ====================================== -->
+        <!-- STUDENT ACTIVITY                       -->
+        <!-- ====================================== -->
+
+        <section id="curriculum-activity" hidden>
+
+            <h2 id="activity-title">
+                Mathematics Activity
+            </h2>
+
+            <p id="activity-question" class="activity-question"></p>
+
+            <!-- INTERACTIVE GRADE 4 ACTIVITY -->
+
+            <div id="grade4-interactive-container" hidden aria-live="polite"></div>
+
+            <!-- REGULAR ANSWER -->
+
+            <div id="regular-answer-container" class="answer-area">
+                <label for="activity-answer">
+                    Your Answer
+                </label>
+
+                <input type="text" id="activity-answer" placeholder="Enter your answer" autocomplete="off">
+            </div>
+
+            <!-- MIXED NUMBER ANSWER -->
+
+            <div id="mixed-number-container" hidden>
+
+                <p>
+                    Enter the whole number, numerator,
+                    and denominator.
+                </p>
+
+                <div class="mixed-number-input">
+
+                    <div>
+                        <label for="mixed-whole">
+                            Whole
+                        </label>
+
+                        <input type="number" id="mixed-whole" min="0" step="1">
+                    </div>
+
+                    <div class="fraction-stack">
+
+                        <label for="mixed-numerator">
+                            Numerator
+                        </label>
+
+                        <input type="number" id="mixed-numerator" min="0" step="1">
+
+                        <div class="fraction-divider"></div>
+
+                        <label for="mixed-denominator">
+                            Denominator
+                        </label>
+
+                        <input type="number" id="mixed-denominator" min="1" step="1">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button type="button" id="check-curriculum-answer" disabled>
+                Check Answer
+            </button>
+
+            <p id="activity-feedback" class="feedback" aria-live="polite"></p>
+
+        </section>
+
+        <!-- ====================================== -->
+        <!-- EXISTING GRADE 3 OA11 ACTIVITY         -->
+        <!-- ====================================== -->
+
+        <section id="grade3-activity" class="legacy-section" hidden>
+
+            <h2>Grade 3 — Fraction Number Line</h2>
+
+            <p class="description">
+                Practice representing common fractions.
+            </p>
+
+            <button type="button" id="generate-activity">
+                Generate Grade 3 Activity
+            </button>
+
+            <p id="assessment-indicator"></p>
+
+            <p id="generated-question" class="activity-question"></p>
+
+            <div id="number-line" class="number-line"></div>
+
+            <div class="answer-area">
+                <label for="generated-answer">
+                    Your Fraction
+                </label>
+
+                <input type="text" id="generated-answer" placeholder="Example: 1/4" autocomplete="off">
+            </div>
+
+            <button type="button" id="check-generated-answer" disabled>
+                Check Grade 3 Answer
+            </button>
+
+            <p id="generated-feedback" class="feedback" aria-live="polite"></p>
+
+        </section>
+
+        <!-- ====================================== -->
+        <!-- EXISTING GRADE 6 FRACTION MODEL       -->
+        <!-- ====================================== -->
+
+        <section id="grade6-activity" class="legacy-section" hidden>
+
+            <h2>Grade 6 — Fraction Model</h2>
+
+            <p>
+                Observe the shaded parts of the fraction.
+            </p>
+
+            <div id="fraction-model" class="fraction-model"></div>
+
+            <div class="answer-area">
+
+                <label for="answer">
+                    How many parts are shaded?
+                </label>
+
+                <input type="number" id="answer" min="0" step="1">
+
+            </div>
+
+            <button type="button" id="check-answer">
+                Check Grade 6 Answer
+            </button>
+
+            <p id="feedback" class="feedback" aria-live="polite"></p>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>
+            Math Learning Path —
+            CSE310 Module #3 —
+            C# ASP.NET Core and MySQL
+        </p>
+    </footer>
+
+    <script src="/js/activities.js" defer></script>
+
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f0f6fc;
+    color: #243447;
+}
+
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    color: #2165a3;
+}
+
+.activity {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px #00000012;
+}
+
+.fraction-model {
+    display: flex;
+    gap: 5px;
+    margin: 25px 0;
+}
+
+.fraction-part {
+    width: 65px;
+    height: 65px;
+    border: 2px solid #2165a3;
+    border-radius: 5px;
+}
+
+.fraction-part.shaded {
+    background: #61a8df;
+}
+
+input {
+    padding: 10px;
+    width: 100px;
+    font-size: 18px;
+}
+
+button {
+    padding: 12px 20px;
+    margin-left: 10px;
+    background: #2165a3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #164a7a;
+}
+
+#feedback {
+    font-weight: bold;
+    margin-top: 20px;
+}

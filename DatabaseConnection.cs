@@ -1,3 +1,5 @@
+
+using System;
 using MySqlConnector;
 
 public static class DatabaseConnection
@@ -7,7 +9,7 @@ public static class DatabaseConnection
         string? password =
             Environment.GetEnvironmentVariable("MYSQL_PASSWORD");
 
-        if (string.IsNullOrEmpty(password))
+        if (string.IsNullOrWhiteSpace(password))
         {
             throw new InvalidOperationException(
                 "MYSQL_PASSWORD is not set.");
@@ -17,7 +19,7 @@ public static class DatabaseConnection
         {
             Server = "localhost",
             Port = 3306,
-            UserID = "root",
+            UserID = "math_app",
             Password = password,
             Database = "math_question_generator"
         };

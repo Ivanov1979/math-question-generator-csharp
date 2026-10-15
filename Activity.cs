@@ -10,6 +10,17 @@ public class Activity
     private string question;
     private string answer;
 
+
+    // Public properties used by the web API for JSON serialization.
+    public string Course => course;
+    public string OA => oa;
+    public string Indicator => indicator;
+    public string Competency => competency;
+    public string Difficulty => difficulty;
+    public string Question => question;
+    public string Answer => answer;
+
+
     // Constructor: initializes all activity information.
     public Activity(
         string course,

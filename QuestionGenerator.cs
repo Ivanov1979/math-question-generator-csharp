@@ -18,7 +18,16 @@ public class QuestionGenerator
         {
             return GenerateNumericalPattern(request);
         }
-
+        // FRACTIONS: Grades 3–6.
+        // Route fraction requests to the dedicated generator.
+        // Other mathematical content remains unchanged.
+        if (request.Content.Equals(
+                "Fractions",
+                StringComparison.OrdinalIgnoreCase))
+        {
+            return new FractionQuestionGenerator()
+                .GenerateQuestion(request);
+        }
         // Fallback when a generator has not yet been
         // implemented for the selected content.
         return new Activity(
